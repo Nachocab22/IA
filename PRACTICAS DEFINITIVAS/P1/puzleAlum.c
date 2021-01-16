@@ -110,10 +110,26 @@ int esValido(unsigned op, tEstado *estado)
    int n=1;
    switch (op)
    {
-      case ARRIBA: if(estado->fila[0] == 1) n=0;break;
-      case ABAJO: if(estado->fila[0] == 3) n=0; break;
-      case IZQUIERDA: if(estado->col[0] == 1) n=0; break;
-      case DERECHA: if(estado->col[0] == 3) n=0; break;
+      case ARRIBA:{ 
+         if(estado->fila[0] == 1) 
+            n=0;
+         break;
+      }
+      case ABAJO:{
+         if(estado->fila[0] == 3) 
+            n=0; 
+         break;
+      }
+      case IZQUIERDA:{
+         if(estado->col[0] == 1) 
+            n=0; 
+         break;
+      }
+      case DERECHA:{
+         if(estado->col[0] == 3) 
+            n=0; 
+         break;
+      }
    }
    return n;
 }
@@ -121,19 +137,45 @@ int esValido(unsigned op, tEstado *estado)
 
 tEstado *aplicaOperador(unsigned op, tEstado *estado)
 {
-   int aux;
    tEstado *nuevo= (tEstado *) malloc(sizeof(tEstado));
    memcpy(nuevo, estado,sizeof(tEstado));  // Hace una copia del estado
+   int fila_origen = estado->fila[0];
+   int col_origen = estado->fila[0];
+   int fila_destino, col_destino;
    switch(op)
    {
-      case ARRIBA: aux = nuevo->celdas[nuevo->fila[0]-1][nuevo->col[0]]; nuevo->celdas[nuevo->fila[aux]][nuevo->col[aux]] = 0; 
-      nuevo->celdas[nuevo->fila[0]][nuevo->col[0]] = aux; nuevo->fila[0]++; nuevo->fila[aux]--;break;
-      case ABAJO: aux = nuevo->celdas[nuevo->fila[0]+1][nuevo->col[0]]; nuevo->celdas[nuevo->fila[aux]][nuevo->col[aux]] = 0; 
-      nuevo->celdas[nuevo->fila[0]][nuevo->col[0]] = aux; nuevo->fila[0]--; nuevo->fila[aux]++;break;
-      case IZQUIERDA: aux = nuevo->celdas[nuevo->fila[0]][nuevo->col[0]+1]; nuevo->celdas[nuevo->fila[aux]][nuevo->col[aux]] = 0;
-      nuevo->celdas[nuevo->fila[0]][nuevo->col[0]] = aux; nuevo->col[0]--; nuevo->col[aux]++;break;
-      case DERECHA: aux = nuevo->celdas[nuevo->fila[0]][nuevo->col[0]+1]; nuevo->celdas[nuevo->fila[aux]][nuevo->col[aux]] = 0;
-      nuevo->celdas[nuevo->fila[0]][nuevo->col[0]] = aux; nuevo->col[0]++; nuevo->col[aux]--;break;
+      case ARRIBA:{ 
+         // aux = nuevo->celdas[nuevo->fila[0]-1][nuevo->col[0]]; 
+         // nuevo->celdas[nuevo->fila[aux]][nuevo->col[aux]] = 0; 
+         // nuevo->celdas[nuevo->fila[0]][nuevo->col[0]] = aux; 
+         // nuevo->fila[0]++; 
+         // nuevo->fila[aux]--;
+         // break;
+         fila_destino = fila_origen-1;
+         col_destino = col_origen;
+      }
+      case ABAJO:{
+         fila_destino = fila_origen+1;
+         col_destino = col_origen;
+      }
+      case IZQUIERDA:{
+         fila_destino = fila_origen;
+         col_destino = col_origen-1;
+      }
+      case DERECHA:{
+         fila_destino = fila_origen;
+         col_destino = col_origen+1;
+      }
+      default: break;
    }
+
+   nuevo->celdas[fila_origen][col_origen] = nuevo->celdas[fila_destino][col_destino];
+   nuevo->fila[nuevo->celdas[fila_destino][col_destino]] = fila_origen;
+   nuevo->col[nuevo->celdas[fila_destino][col_destino]] = col_destino;
+
+   nuevo->celdas[fila_destino][col_destino] = 0;
+   nuevo->fila[0] = fila_destino;
+   nuevo->col[0] = col_destino;
+
    return nuevo;
 }

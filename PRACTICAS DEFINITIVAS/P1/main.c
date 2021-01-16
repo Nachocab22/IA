@@ -7,6 +7,8 @@ int main()
     tEstado *estado;
     estado = estadoInicial();
 
+    printf("\nFila del 0: %d Columna del 0: %d\n", estado->fila[0], estado->col[0]);
+
     dispEstado(estado);
 
     if(testObjetivo(estado) == 1)
